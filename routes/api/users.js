@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
@@ -48,6 +49,13 @@ router.post(
 
       user.password = await bcrypt.hash(password, salt);
       await user.save();
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
       res.send("User register");
     } catch (err) {
       console.error(err.message);
